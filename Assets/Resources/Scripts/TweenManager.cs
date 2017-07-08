@@ -8,54 +8,67 @@ namespace SubwaySpraypainter {
 	public class TweenManager : SingletonMonobehavior<TweenManager> {
 
 		// An instance of a tween.
-		private class TweenInstance {
-
-			// Duration of this tween.
-			internal float duration;
-
-			// Current time of this tween.
-			internal float time;
-
-			// Step action.
-			internal Action<float> step;
-
-			// On complete action.
-			internal Action onComplete;
+		public class TweenInstance {
 
 			// If set to true, this tween is completed.
-			internal bool completed = false;
+			public bool Completed {
+				get;
+				private set;
+			}
+
+			// Duration of this tween.
+			private float duration;
+
+			// Current time of this tween.
+			private float time;
+
+			// Step action.
+			private Action<float> step;
+
+			// On complete action.
+			private Action onComplete;
 
 			// Constructor.
-			internal TweenInstance(float duration, Action<float> step, Action onComplete = null) {
+			public TweenInstance(float duration, float delay = 0) {
 				this.duration = duration;
-				this.step = step;
-				this.onComplete = onComplete;
-				time = 0;
+				time = -delay;
 			}
 
 			// Update this instance.
 			internal void Update(float dt) {
-				if(completed) {
+				if(Completed) {
 					return;
 				}
 				time += dt;
 				if(time >= duration) {
 					time = duration;
-					completed = true;
+					Completed = true;
 				}
 				if(step != null) {
 					step(GetInterpolation());
 				}
-				if(completed) {
+				if(Completed) {
 					if(onComplete != null) {
 						onComplete();
 					}
 				}
 			}
 
+			// Assign step action.
+			public TweenInstance OnStep(Action<float> step) {
+				this.step = step;
+				return this;
+			}
+
+			// Assign complete action.
+			public TweenInstance OnComplete(Action onComplete) {
+				this.onComplete = onComplete;
+				return this;
+			}
+
 			// Calculate interpolation value.
 			private float GetInterpolation() {
-				return time / duration;
+				return Mathf.Clamp(time, 0, duration) / duration;
 			}
 		}
 
@@ -67,7 +80,7 @@ namespace SubwaySpraypainter {
 			List<TweenInstance> toRemove = new List<TweenInstance>();
 			foreach(TweenInstance tween in tweens) {
 				tween.Update(Time.deltaTime);
-				if(tween.completed) {
+				if(tween.Completed) {
 					toRemove.Add(tween);
 				}
 			}
@@ -77,8 +90,10 @@ namespace SubwaySpraypainter {
 		}
 
 		// Add a new tween.
-		public static void Tween(float duration, Action<float> step, Action onComplete = null) {
-			Instance.tweens.Add(new TweenInstance(duration, step, onComplete));
+		public static TweenInstance Tween(float duration, float delay = 0) {
+			TweenInstance tween = new TweenInstance(duration, delay);
+			Instance.tweens.Add(tween);
+			return tween;
 		}
 	}
 }

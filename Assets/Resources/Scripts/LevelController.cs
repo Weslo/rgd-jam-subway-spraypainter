@@ -22,10 +22,27 @@ namespace SubwaySpraypainter {
 		private void GoToNextWall() {
 
 			// Get next wall x pos.
-			float x = current == null ? 0 : current.transform.position.x + WALL_SEGMENT_SPACING;
+			float prevX = current == null ? -WALL_SEGMENT_SPACING : current.transform.position.x;
+			float x = prevX + WALL_SEGMENT_SPACING;
+
+			// Tween the camera to the next wall.
+			WallSegment previous = current;
+			TweenManager.Tween(1, 1).OnStep((t) => {
+				Camera.main.transform.position = new Vector3(Mathf.Lerp(prevX, x, t), Camera.main.transform.position.y, Camera.main.transform.position.z);
+			}).OnComplete(() => {
+				if(previous != null) {
+					Destroy(previous.gameObject);
+				}
+			});
 
 			// Spawn next wall.
-			WallSegment wall = Instantiate(Resources.Load<WallSegment>("Resources/Prefabs/Wall Segment"), new Vector3(x, 0, 0), Quaternion.identity);
+			current = Instantiate(Resources.Load<WallSegment>("Prefabs/Wall Segment"), new Vector3(x, 0, 0), Quaternion.identity);
+			current.OnAllCompleted += OnWallComplete;
+		}
+
+		// Called when a wall is completed.
+		private void OnWallComplete(WallSegment wall) {
+			GoToNextWall();
 		}
 	}
 }
