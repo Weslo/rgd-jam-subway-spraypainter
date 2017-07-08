@@ -43,15 +43,6 @@ namespace SubwaySpraypainter {
 		// If set to true, graffiti is completed.
 		private bool completed = false;
 
-		// Texture width.
-		private int width = 6;
-
-		// Texture height.
-		private int height = 3;
-
-		// Previous mouse pos.
-		private Vector2 prevMousePos;
-
 		// Matrix of points available on this graffiti.
 		private bool[,] pointsMatrix;
 
@@ -60,7 +51,7 @@ namespace SubwaySpraypainter {
 
 		// Use this for initialization
 		void Start() {
-			tex = new Texture2D(width * MASK_TEXTURE_RES, height * MASK_TEXTURE_RES);
+			tex = new Texture2D((int)(mask.size.x * MASK_TEXTURE_RES), (int)(mask.size.y * MASK_TEXTURE_RES));
 			for(int x = 0; x < tex.width; x++) {
 				for(int y = 0; y < tex.height; y++) {
 					tex.SetPixel(x, y, new Color(1, 1, 1, 0));
@@ -70,11 +61,10 @@ namespace SubwaySpraypainter {
 			tex.Apply();
 
 			mask.texture = tex;
-			mask.size = new Vector2(width, height);
 			pointsMatrix = new bool[tex.width, tex.height];
 
 			BoxCollider2D col = GetComponent<BoxCollider2D>();
-			col.size = new Vector2(width, height);
+			col.size = new Vector2(mask.size.x, mask.size.y);
 
 			highlighter.FlashingOn(new Color(1, 1, 1, 0), Color.red);
 		}
@@ -94,8 +84,8 @@ namespace SubwaySpraypainter {
 			if(!completed && PaintingEnabled) {
 				Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 				pos -= transform.position;
-				int cx = (int)(pos.x * MASK_TEXTURE_RES) + (width * MASK_TEXTURE_RES) / 2;
-				int cy = (int)(pos.y * MASK_TEXTURE_RES) + (height * MASK_TEXTURE_RES) / 2;
+				int cx = (int)(pos.x * MASK_TEXTURE_RES + (mask.size.x * MASK_TEXTURE_RES) / 2);
+				int cy = (int)(pos.y * MASK_TEXTURE_RES + (mask.size.y * MASK_TEXTURE_RES) / 2);
 
 				int brushRadius = BRUSH_RADIUS;
 				for(int x = cx - brushRadius; x < cx + brushRadius; x++) {
@@ -115,7 +105,6 @@ namespace SubwaySpraypainter {
 					Complete();
 				}
 				tex.Apply();
-				prevMousePos = pos;
 			}
 		}
 
@@ -131,7 +120,7 @@ namespace SubwaySpraypainter {
 			highlighter.ConstantOn(Color.yellow);
 			GetComponent<Animator>().Play("Completed");
 			completed = true;
-			mask.texture = new Texture2D(width, height);
+			mask.texture = new Texture2D((int)mask.size.x, (int)mask.size.y);
 			if(OnCompleted != null) {
 				OnCompleted(this);
 			}

@@ -15,6 +15,10 @@ namespace SubwaySpraypainter {
 		[SerializeField]
 		private Transform[] policeSpawnPoints;
 
+		// List of potential graffiti assets.
+		[SerializeField]
+		private Graffiti[] graffitiAssets;
+
 		// Fires when all the graffiti on this wall is completed.
 		public Action<WallSegment> OnAllCompleted;
 
@@ -40,9 +44,17 @@ namespace SubwaySpraypainter {
 			this.numGraffitis = numGraffitis;
 			List<Transform> spawns = new List<Transform>(graffitiSpawnPoints);
 			for(int i = 0; i < numGraffitis; i++) {
+
+				// Pick random graffiti asset.
+				int ra = UnityEngine.Random.Range(0, graffitiAssets.Length);
+				Graffiti resource = graffitiAssets[ra];
+
+				// Pick random spawn point.
 				int ri = UnityEngine.Random.Range(0, spawns.Count);
 				Transform spawn = spawns[ri];
-				Graffiti graffiti = Instantiate(Resources.Load<Graffiti>("Prefabs/Graffiti"));
+
+				// Spawn graffiti.
+				Graffiti graffiti = Instantiate(resource);
 				graffiti.transform.SetParent(transform, false);
 				graffiti.transform.position = spawn.transform.position;
 				graffiti.OnCompleted += OnCompleteGraffiti;
