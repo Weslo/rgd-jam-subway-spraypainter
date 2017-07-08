@@ -11,14 +11,40 @@ namespace SubwaySpraypainter {
 		// Spacing between wall segments.
 		private const float WALL_SEGMENT_SPACING = 20;
 
+		// Reference to the spray paint particles object.
+		[SerializeField]
+		private ParticleSystem sprayPaintParticles;
+
 		// The current wall segment.
 		private WallSegment current = null;
 
-		// Initialize this game state
+		// Painting state last frame.
+		private bool prevPainting = false;
+
+		// Initialize this game state.
 		public override void OnInitializeState() {
 			base.OnInitializeState();
 			Graffiti.PaintingEnabled = true;
+			sprayPaintParticles.GetComponent<Renderer>().sortingLayerName = "Foreground";
 			GoToNextWall();
+		}
+
+		// Update this game state.
+		public override void OnUpdateState() {
+			base.OnUpdateState();
+
+			if(Graffiti.Painting && !prevPainting) {
+				sprayPaintParticles.Play();
+			}
+
+			if(Graffiti.Painting) {
+				Vector3 mp = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				sprayPaintParticles.transform.position = new Vector3(mp.x, mp.y, 0);
+			}
+			else {
+				sprayPaintParticles.Stop();
+			}
+			prevPainting = Graffiti.Painting;
 		}
 
 		// Spawn the next wall segment.
