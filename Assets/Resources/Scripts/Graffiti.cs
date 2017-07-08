@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using HighlightingSystem;
 
 namespace SubwaySpraypainter {
@@ -7,8 +8,10 @@ namespace SubwaySpraypainter {
 	[RequireComponent(typeof(BoxCollider2D))]
 	public class Graffiti : MonoBehaviour {
 
+		// Mask texture resolution.
 		private const int MASK_TEXTURE_RES = 100;
 
+		// Paint brush radius.
 		private const int BRUSH_RADIUS = 50;
 
 		// Reference to the mask renderer.
@@ -18,6 +21,9 @@ namespace SubwaySpraypainter {
 		// Reference to the highlight.
 		[SerializeField]
 		private Highlighter highlighter;
+
+		// Fires when this graffiti is completed.
+		public Action<Graffiti> OnCompleted;
 
 		// Reference to the procedural mask texture
 		private Texture2D tex;
@@ -104,6 +110,9 @@ namespace SubwaySpraypainter {
 			GetComponent<Animator>().Play("Completed");
 			completed = true;
 			mask.texture = new Texture2D(width, height);
+			if(OnCompleted != null) {
+				OnCompleted(this);
+			}
 		}
 	}
 }
