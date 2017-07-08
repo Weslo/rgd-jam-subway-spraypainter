@@ -77,15 +77,13 @@ namespace SubwaySpraypainter {
 
 		// Update this component between frames.
 		void Update() {
-			List<TimerInstance> toRemove = new List<TimerInstance>();
-			foreach(TimerInstance timer in timers) {
+			TimerInstance[] toUpdate = new TimerInstance[timers.Count];
+			timers.CopyTo(toUpdate);
+			foreach(TimerInstance timer in toUpdate) {
 				timer.Update(Time.deltaTime);
 				if(timer.Completed) {
-					toRemove.Add(timer);
+					timers.Remove(timer);
 				}
-			}
-			foreach(TimerInstance timer in toRemove) {
-				timers.Remove(timer);
 			}
 		}
 

@@ -27,6 +27,8 @@ namespace SubwaySpraypainter {
 		// Initialize this component.
 		void Start() {
 			SpawnGraffiti(3);
+			SpawnPolice();
+			ScheduleSpawnPolice();
 		}
 
 		// Spawn graffiti on this wall.
@@ -48,10 +50,20 @@ namespace SubwaySpraypainter {
 
 		// Spawn a police officer on this wall.
 		public void SpawnPolice() {
+			Debug.LogWarning("spawn");
 			int ri = UnityEngine.Random.Range(0, policeSpawnPoints.Length);
 			Transform spawn = policeSpawnPoints[ri];
 			Police police = Instantiate(Resources.Load<Police>("Prefabs/Police"));
+			police.transform.SetParent(transform, false);
+			police.transform.position = spawn.transform.position;
 			police.Activate();
+		}
+
+		// Schedule spawning a police officer.
+		private void ScheduleSpawnPolice() {
+			TimerManager.Schedule(10).OnComplete(() => {
+				SpawnPolice();
+			});
 		}
 
 		// Called when a graffiti is completed.
