@@ -29,8 +29,9 @@ namespace SubwaySpraypainter {
 				active = true;
 				TweenManager.Tween(1, 3, "police").OnStep((t) => {
 					transform.position = Vector3.Lerp(targetPos, spawnPos, t);
-				}).OnComplete(() => {
+				}).OnBegin(() => {
 					active = false;
+				}).OnComplete(() => {
 					Destroy(gameObject);
 				});
 			});

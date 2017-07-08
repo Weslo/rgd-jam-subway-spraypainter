@@ -10,6 +10,12 @@ namespace SubwaySpraypainter {
 		// An instance of a timer.
 		public class TimerInstance {
 
+			// If set to true, this timer is begun.
+			public bool Begun {
+				get;
+				private set;
+			}
+
 			// If set to true, this timer is completed.
 			public bool Completed {
 				get;
@@ -31,6 +37,9 @@ namespace SubwaySpraypainter {
 			// Step action.
 			private Action<float> step;
 
+			// On begin action.
+			private Action onBegin;
+
 			// On complete action.
 			private Action onComplete;
 
@@ -47,6 +56,12 @@ namespace SubwaySpraypainter {
 					return;
 				}
 				time += dt;
+				if(!Begun && time >= 0) {
+					Begun = true;
+					if(onBegin != null) {
+						onBegin();
+					}
+				}
 				if(time >= duration) {
 					time = duration;
 					Completed = true;
@@ -64,6 +79,12 @@ namespace SubwaySpraypainter {
 			// Assign step action.
 			public TimerInstance OnStep(Action<float> step) {
 				this.step = step;
+				return this;
+			}
+
+			// Assign begin action.
+			public TimerInstance OnBegin(Action onBegin) {
+				this.onBegin = onBegin;
 				return this;
 			}
 
