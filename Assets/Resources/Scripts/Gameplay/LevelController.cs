@@ -31,6 +31,12 @@ namespace SubwaySpraypainter {
 
 			// Tween the camera to the next wall.
 			WallSegment previous = current;
+
+			// Spawn next wall.
+			current = Instantiate(Resources.Load<WallSegment>("Prefabs/Wall Segment"), new Vector3(x, 0, 0), Quaternion.identity);
+			current.transform.SetParent(transform, true);
+			current.OnAllCompleted += OnWallComplete;
+
 			TweenManager.Tween(1, 1).OnStep((t) => {
 				Camera.main.transform.position = new Vector3(
 					Mathf.Lerp(prevX, x, t),
@@ -38,14 +44,11 @@ namespace SubwaySpraypainter {
 					Camera.main.transform.position.z
 				);
 			}).OnComplete(() => {
+				current.SpawnGraffiti(3);
 				if(previous != null) {
 					Destroy(previous.gameObject);
 				}
 			});
-
-			// Spawn next wall.
-			current = Instantiate(Resources.Load<WallSegment>("Prefabs/Wall Segment"), new Vector3(x, 0, 0), Quaternion.identity);
-			current.OnAllCompleted += OnWallComplete;
 		}
 
 		// Called when a wall is completed.

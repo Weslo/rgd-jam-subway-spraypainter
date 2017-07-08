@@ -26,7 +26,6 @@ namespace SubwaySpraypainter {
 
 		// Initialize this component.
 		void Start() {
-			SpawnGraffiti(3);
 			SpawnPolice();
 			ScheduleSpawnPolice();
 		}
