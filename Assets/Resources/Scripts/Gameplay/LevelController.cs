@@ -28,7 +28,11 @@ namespace SubwaySpraypainter {
 			// Tween the camera to the next wall.
 			WallSegment previous = current;
 			TweenManager.Tween(1, 1).OnStep((t) => {
-				Camera.main.transform.position = new Vector3(Mathf.Lerp(prevX, x, t), Camera.main.transform.position.y, Camera.main.transform.position.z);
+				Camera.main.transform.position = new Vector3(
+					Mathf.Lerp(prevX, x, t),
+					Camera.main.transform.position.y,
+					Camera.main.transform.position.z
+				);
 			}).OnComplete(() => {
 				if(previous != null) {
 					Destroy(previous.gameObject);

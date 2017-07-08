@@ -4,19 +4,19 @@ using UnityEngine;
 
 namespace SubwaySpraypainter {
 
-	// Manages tweens.
-	public class TweenManager : SingletonMonobehavior<TweenManager> {
+	// Manages timers.
+	public abstract class SchedulingManager<T> : SingletonMonobehavior<T> where T : SchedulingManager<T> {
 
-		// An instance of a tween.
-		public class TweenInstance {
+		// An instance of a timer.
+		public class TimerInstance {
 
-			// If set to true, this tween is completed.
+			// If set to true, this timer is completed.
 			public bool Completed {
 				get;
 				private set;
 			}
 
-			// Duration of this tween.
+			// Duration of this timer.
 			private float duration;
 
 			// Current time of this tween.
@@ -29,7 +29,7 @@ namespace SubwaySpraypainter {
 			private Action onComplete;
 
 			// Constructor.
-			public TweenInstance(float duration, float delay = 0) {
+			public TimerInstance(float duration, float delay = 0) {
 				this.duration = duration;
 				time = -delay;
 			}
@@ -55,13 +55,13 @@ namespace SubwaySpraypainter {
 			}
 
 			// Assign step action.
-			public TweenInstance OnStep(Action<float> step) {
+			public TimerInstance OnStep(Action<float> step) {
 				this.step = step;
 				return this;
 			}
 
 			// Assign complete action.
-			public TweenInstance OnComplete(Action onComplete) {
+			public TimerInstance OnComplete(Action onComplete) {
 				this.onComplete = onComplete;
 				return this;
 			}
@@ -73,27 +73,27 @@ namespace SubwaySpraypainter {
 		}
 
 		// List of active tweens.
-		private List<TweenInstance> tweens = new List<TweenInstance>();
+		private List<TimerInstance> timers = new List<TimerInstance>();
 
 		// Update this component between frames.
 		void Update() {
-			List<TweenInstance> toRemove = new List<TweenInstance>();
-			foreach(TweenInstance tween in tweens) {
-				tween.Update(Time.deltaTime);
-				if(tween.Completed) {
-					toRemove.Add(tween);
+			List<TimerInstance> toRemove = new List<TimerInstance>();
+			foreach(TimerInstance timer in timers) {
+				timer.Update(Time.deltaTime);
+				if(timer.Completed) {
+					toRemove.Add(timer);
 				}
 			}
-			foreach(TweenInstance tween in toRemove) {
-				tweens.Remove(tween);
+			foreach(TimerInstance timer in toRemove) {
+				timers.Remove(timer);
 			}
 		}
 
 		// Add a new tween.
-		public static TweenInstance Tween(float duration, float delay = 0) {
-			TweenInstance tween = new TweenInstance(duration, delay);
-			Instance.tweens.Add(tween);
-			return tween;
+		protected static TimerInstance Begin(float duration, float delay = 0) {
+			TimerInstance timer = new TimerInstance(duration, delay);
+			Instance.timers.Add(timer);
+			return timer;
 		}
 	}
 }

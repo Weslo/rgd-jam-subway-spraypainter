@@ -8,6 +8,12 @@ namespace SubwaySpraypainter {
 	[RequireComponent(typeof(BoxCollider2D))]
 	public class Graffiti : MonoBehaviour {
 
+		// If set to true, the user is painting.
+		public static bool Painting {
+			get;
+			private set;
+		}
+
 		// Mask texture resolution.
 		private const int MASK_TEXTURE_RES = 100;
 
@@ -65,6 +71,16 @@ namespace SubwaySpraypainter {
 			col.size = new Vector2(width, height);
 
 			highlighter.FlashingOn(new Color(1, 1, 1, 0), Color.red);
+		}
+
+		// On mouse down.
+		void OnMouseDown() {
+			Painting = true;
+		}
+
+		// On mouse up.
+		void OnMouseUp() {
+			Painting = false;
 		}
 
 		// On mouse drag.

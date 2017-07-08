@@ -11,6 +11,10 @@ namespace SubwaySpraypainter {
 		[SerializeField]
 		private Transform[] graffitiSpawnPoints;
 
+		// List of potential police spawn points.
+		[SerializeField]
+		private Transform[] policeSpawnPoints;
+
 		// Fires when all the graffiti on this wall is completed.
 		public Action<WallSegment> OnAllCompleted;
 
@@ -40,6 +44,14 @@ namespace SubwaySpraypainter {
 				graffiti.OnCompleted += OnCompleteGraffiti;
 				spawns.RemoveAt(ri);
 			}
+		}
+
+		// Spawn a police officer on this wall.
+		public void SpawnPolice() {
+			int ri = UnityEngine.Random.Range(0, policeSpawnPoints.Length);
+			Transform spawn = policeSpawnPoints[ri];
+			Police police = Instantiate(Resources.Load<Police>("Prefabs/Police"));
+			police.Activate();
 		}
 
 		// Called when a graffiti is completed.
