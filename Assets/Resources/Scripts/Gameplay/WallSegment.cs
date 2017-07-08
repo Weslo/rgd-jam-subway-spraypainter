@@ -18,6 +18,9 @@ namespace SubwaySpraypainter {
 		// Fires when all the graffiti on this wall is completed.
 		public Action<WallSegment> OnAllCompleted;
 
+		// Fires when the player is caught.
+		public Action<WallSegment> OnPlayerCaught;
+
 		// Total number of graffitis on this wall.
 		private int numGraffitis;
 
@@ -54,6 +57,7 @@ namespace SubwaySpraypainter {
 			Police police = Instantiate(Resources.Load<Police>("Prefabs/Police"));
 			police.transform.SetParent(transform, false);
 			police.transform.position = spawn.transform.position;
+			police.OnCatchPlayer += OnPoliceCatchesPlayer;
 			police.Activate();
 		}
 
@@ -71,6 +75,13 @@ namespace SubwaySpraypainter {
 				if(OnAllCompleted != null) {
 					OnAllCompleted(this);
 				}
+			}
+		}
+
+		// Called when the police catches the player.
+		private void OnPoliceCatchesPlayer(Police police) {
+			if(OnPlayerCaught != null) {
+				OnPlayerCaught(this);
 			}
 		}
 	}

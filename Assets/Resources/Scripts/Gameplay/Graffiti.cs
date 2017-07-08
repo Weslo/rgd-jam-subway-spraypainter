@@ -14,6 +14,12 @@ namespace SubwaySpraypainter {
 			private set;
 		}
 
+		// If set to true, painting is enabled.
+		public static bool PaintingEnabled {
+			get;
+			set;
+		}
+
 		// Mask texture resolution.
 		private const int MASK_TEXTURE_RES = 100;
 
@@ -85,7 +91,7 @@ namespace SubwaySpraypainter {
 
 		// On mouse drag.
 		void OnMouseDrag() {
-			if(!completed) {
+			if(!completed && PaintingEnabled) {
 				Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 				pos -= transform.position;
 				int cx = (int)(pos.x * MASK_TEXTURE_RES) + (width * MASK_TEXTURE_RES) / 2;
