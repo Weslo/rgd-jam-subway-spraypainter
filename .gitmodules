@@ -1,0 +1,3 @@
+[submodule "Assets/YesAndEngine"]
+	path = Assets/YesAndEngine
+	url = https://github.com/YesAndGames/YesAndEngine.git
