@@ -21,6 +21,10 @@ namespace SubwaySpraypainter {
 		// Spawn the next wall segment.
 		private void GoToNextWall() {
 
+			// Cancel police tweens.
+			TweenManager.Cancel("police");
+			TimerManager.Cancel("police");
+
 			// Get next wall x pos.
 			float prevX = current == null ? -WALL_SEGMENT_SPACING : current.transform.position.x;
 			float x = prevX + WALL_SEGMENT_SPACING;

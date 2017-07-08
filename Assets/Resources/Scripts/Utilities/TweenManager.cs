@@ -8,8 +8,8 @@ namespace SubwaySpraypainter {
 	public class TweenManager : SchedulingManager<TweenManager> {
 
 		// Add a new tween.
-		public static TimerInstance Tween(float duration, float delay = 0) {
-			return Begin(duration, delay);
+		public static TimerInstance Tween(float duration, float delay = 0, string id = null) {
+			return Begin(duration, delay, id);
 		}
 	}
 }

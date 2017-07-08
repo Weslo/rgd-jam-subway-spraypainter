@@ -19,8 +19,14 @@ namespace SubwaySpraypainter {
 			// Duration of this timer.
 			private float duration;
 
-			// Current time of this tween.
+			// Current time of this timer.
 			private float time;
+
+			// The id of this timer.
+			public string ID {
+				get;
+				private set;
+			}
 
 			// Step action.
 			private Action<float> step;
@@ -29,9 +35,10 @@ namespace SubwaySpraypainter {
 			private Action onComplete;
 
 			// Constructor.
-			public TimerInstance(float duration, float delay = 0) {
+			public TimerInstance(float duration, float delay = 0, string id = null) {
 				this.duration = duration;
 				time = -delay;
+				ID = id;
 			}
 
 			// Update this instance.
@@ -72,7 +79,7 @@ namespace SubwaySpraypainter {
 			}
 		}
 
-		// List of active tweens.
+		// List of active timers.
 		private List<TimerInstance> timers = new List<TimerInstance>();
 
 		// Update this component between frames.
@@ -87,11 +94,22 @@ namespace SubwaySpraypainter {
 			}
 		}
 
-		// Add a new tween.
-		protected static TimerInstance Begin(float duration, float delay = 0) {
-			TimerInstance timer = new TimerInstance(duration, delay);
+		// Add a new timer.
+		protected static TimerInstance Begin(float duration, float delay = 0, string id = null) {
+			TimerInstance timer = new TimerInstance(duration, delay, id);
 			Instance.timers.Add(timer);
 			return timer;
+		}
+
+		// Cancel timers with the specified id.
+		public static void Cancel(string id) {
+			TimerInstance[] toUpdate = new TimerInstance[Instance.timers.Count];
+			Instance.timers.CopyTo(toUpdate);
+			foreach(TimerInstance timer in toUpdate) {
+				if(!string.IsNullOrEmpty(timer.ID) && timer.ID.Equals(id)) {
+					Instance.timers.Remove(timer);
+				}
+			}
 		}
 	}
 }

@@ -14,11 +14,11 @@ namespace SubwaySpraypainter {
 		public void Activate() {
 			Vector3 spawnPos = transform.position;
 			Vector3 targetPos = transform.position + Vector3.up * 2;
-			TweenManager.Tween(3, 0).OnStep((t) => {
+			TweenManager.Tween(3, 0, "police").OnStep((t) => {
 				transform.position = Vector3.Lerp(spawnPos, targetPos, t);
 			}).OnComplete(() => {
 				active = true;
-				TweenManager.Tween(1, 3).OnStep((t) => {
+				TweenManager.Tween(1, 3, "police").OnStep((t) => {
 					transform.position = Vector3.Lerp(targetPos, spawnPos, t);
 				}).OnComplete(() => {
 					active = false;
