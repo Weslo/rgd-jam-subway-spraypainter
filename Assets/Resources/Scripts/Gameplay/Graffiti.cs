@@ -51,13 +51,12 @@ namespace SubwaySpraypainter {
 
 		// Use this for initialization
 		void Start() {
-			tex = new Texture2D((int)(mask.size.x * MASK_TEXTURE_RES), (int)(mask.size.y * MASK_TEXTURE_RES));
+			tex = new Texture2D((int)(mask.size.x * MASK_TEXTURE_RES), (int)(mask.size.y * MASK_TEXTURE_RES), TextureFormat.Alpha8, false);
 			for(int x = 0; x < tex.width; x++) {
 				for(int y = 0; y < tex.height; y++) {
 					tex.SetPixel(x, y, new Color(1, 1, 1, 0));
 				}
 			}
-			tex.alphaIsTransparency = true;
 			tex.Apply();
 
 			mask.texture = tex;
