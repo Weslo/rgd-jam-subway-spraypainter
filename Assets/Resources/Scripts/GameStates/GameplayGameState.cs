@@ -11,6 +11,9 @@ namespace SubwaySpraypainter {
 		// Spacing between wall segments.
 		private const float WALL_SEGMENT_SPACING = 20;
 
+		// Number of graffiti to spawn.
+		private const int NUM_GRAFFITI = 3;
+
 		// Reference to the spray paint particles object.
 		[SerializeField]
 		private ParticleSystem sprayPaintParticles;
@@ -53,9 +56,12 @@ namespace SubwaySpraypainter {
 			// Cancel gameplay tweens.
 			CancelGameplayTimers();
 
+			// If this is the first wall, we're going to skip the transition animation.
+			bool firstWall = current == null;
+
 			// Get next wall x pos.
-			float prevX = current == null ? -WALL_SEGMENT_SPACING : current.transform.position.x;
-			float x = prevX + WALL_SEGMENT_SPACING;
+			float prevX = firstWall ? 0 : current.transform.position.x;
+			float x = firstWall ? 0 : prevX + WALL_SEGMENT_SPACING;
 
 			// Tween the camera to the next wall.
 			WallSegment previous = current;
@@ -66,18 +72,24 @@ namespace SubwaySpraypainter {
 			current.OnAllCompleted += OnWallComplete;
 			current.OnPlayerCaught += OnPlayerCaught;
 
-			TweenManager.Tween(1, 1).OnStep((t) => {
-				Camera.main.transform.position = new Vector3(
-					Mathf.Lerp(prevX, x, t),
-					Camera.main.transform.position.y,
-					Camera.main.transform.position.z
-				);
-			}).OnComplete(() => {
-				current.SpawnGraffiti(3);
-				if(previous != null) {
-					Destroy(previous.gameObject);
-				}
-			});
+			// Transition to next wall.
+			if(!firstWall) {
+				TweenManager.Tween(1, 1).OnStep((t) => {
+					Camera.main.transform.position = new Vector3(
+						Mathf.Lerp(prevX, x, t),
+						Camera.main.transform.position.y,
+						Camera.main.transform.position.z
+					);
+				}).OnComplete(() => {
+					if(previous != null) {
+						current.SpawnGraffiti(NUM_GRAFFITI);
+						Destroy(previous.gameObject);
+					}
+				});
+			}
+			else {
+				current.SpawnGraffiti(NUM_GRAFFITI);
+			}
 		}
 
 		// Called when a wall is completed.
