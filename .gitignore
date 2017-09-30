@@ -219,6 +219,7 @@ pip-log.txt
 # =============== #
 [Tt]emp/
 [Ll]ibrary
+[Bb]uilds/
 Assets/StreamingAssets*
 
 # ===================================== #
