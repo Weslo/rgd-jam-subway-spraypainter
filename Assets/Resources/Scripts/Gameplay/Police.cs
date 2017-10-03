@@ -16,6 +16,7 @@ namespace SubwaySpraypainter {
 		void Update() {
 			if(active && Graffiti.Painting) {
 				CatchPlayer();
+				active = false;
 			}
 		}
 

@@ -18,6 +18,14 @@ namespace SubwaySpraypainter {
 		[SerializeField]
 		private ParticleSystem sprayPaintParticles;
 
+		// VO to play when the player is busted.
+		[SerializeField]
+		private AudioClip bustedVO;
+
+		// Sting to play when the player is busted.
+		[SerializeField]
+		private AudioClip bustedSting;
+
 		// The current wall segment.
 		private WallSegment current = null;
 
@@ -101,7 +109,10 @@ namespace SubwaySpraypainter {
 		private void OnPlayerCaught(WallSegment wall) {
 			Graffiti.PaintingEnabled = false;
 			CancelGameplayTimers();
-			TimerManager.Schedule(2).OnComplete(() => {
+			GlobalAudioController.TransitionState("Sting");
+			GlobalAudioController.Play("VO", bustedVO);
+			GlobalAudioController.Play("Stings", bustedSting);
+			TimerManager.Schedule(5).OnComplete(() => {
 				Manager.SwitchState("Game Over");
 			});
 		}

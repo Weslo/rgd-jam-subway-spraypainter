@@ -113,6 +113,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprayPaintParticles: {fileID: 198333772623800384}
+  bustedVO: {fileID: 8300000, guid: 457d997a185934058bbd29a30d596d99, type: 3}
+  bustedSting: {fileID: 8300000, guid: e4a96196b060d4c23b66e7e9f462a307, type: 3}
 --- !u!114 &114836147739147954
 MonoBehaviour:
   m_ObjectHideFlags: 1
