@@ -70,6 +70,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f9aa62e6a60b4040939a505f6676dce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  warningVO:
+  - {fileID: 8300000, guid: fb3a0cd27b51849d18072cd0010b0404, type: 3}
+  - {fileID: 8300000, guid: 63b7308446fe646a0b2ca602a1770c33, type: 3}
+  - {fileID: 8300000, guid: 538144950c92d491bbae996bc0b4441d, type: 3}
+  - {fileID: 8300000, guid: 12360442a47e24a65a7f8542293e702d, type: 3}
 --- !u!212 &212594892321705266
 SpriteRenderer:
   m_ObjectHideFlags: 1

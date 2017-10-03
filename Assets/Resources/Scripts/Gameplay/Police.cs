@@ -6,6 +6,10 @@ namespace SubwaySpraypainter {
 	// Police officer controller.
 	public class Police : MonoBehaviour {
 
+		// Random VO lines to play as warnings.
+		[SerializeField]
+		private AudioClip[] warningVO;
+
 		// If set to true, this police officer is activated.
 		private bool active = false;
 
@@ -22,6 +26,11 @@ namespace SubwaySpraypainter {
 
 		// Activate this officer.
 		public void Activate() {
+
+			// Play random VO line.
+			GlobalAudioController.Play("VO", warningVO.PickRandom());
+
+			// Move up from spawn.
 			Vector3 spawnPos = transform.position;
 			Vector3 targetPos = transform.position + Vector3.up * 2;
 			TweenManager.Tween(3, 0, "police").OnStep((t) => {

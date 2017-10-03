@@ -34,7 +34,6 @@ namespace SubwaySpraypainter {
 		// Initialize this component.
 		void Start() {
 			SpawnPolice();
-			ScheduleSpawnPolice();
 		}
 
 		// Spawn graffiti on this wall.
@@ -71,6 +70,7 @@ namespace SubwaySpraypainter {
 			police.transform.position = spawn.transform.position;
 			police.OnCatchPlayer += OnPoliceCatchesPlayer;
 			police.Activate();
+			ScheduleSpawnPolice();
 		}
 
 		// Schedule spawning a police officer.
